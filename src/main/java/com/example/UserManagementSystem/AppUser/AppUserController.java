@@ -26,6 +26,12 @@ public class AppUserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/update")
+    public ResponseEntity<String> updateUser (@RequestBody AppUser user){
+        service.updateUser(user);
+        return ResponseEntity.ok().build();
+    }
+
     @DeleteMapping("/delete/{id}/")
     public ResponseEntity<String> deleteUser (@PathVariable long id){
         service.deleteUser(id);

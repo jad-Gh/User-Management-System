@@ -25,6 +25,10 @@ public class AppUserService {
         log.info("user saved :)");
     }
 
+    public void updateUser(AppUser user){
+        repo.save(user);
+    }
+
     public void deleteUser(Long id){
         repo.deleteById(id);
         log.info("deleted user with id: " + id);
