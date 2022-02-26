@@ -2,13 +2,17 @@ package com.example.UserManagementSystem.AppUser;
 
 
 
+import com.example.UserManagementSystem.Response.Response;
 import com.example.UserManagementSystem.Roles.AppRole;
 import com.example.UserManagementSystem.Roles.RoleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -18,51 +22,65 @@ public class AppUserController {
     private final AppUserService service;
 
     @GetMapping
-    public ResponseEntity<List<AppUser>> getAllUsers (){
-        try{
-            return ResponseEntity.ok().body(service.getUsers());
-        }catch(Exception e){
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<Response> getAllUsers (){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message("Success")
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .data(Map.of("Users",service.getUsers())).build()
+        );
     }
 
     @GetMapping("/roles")
-    public ResponseEntity<List<AppRole>> getRoles (){
-        try{
-            return ResponseEntity.ok().body(service.getRoles());
-        }catch(Exception e){
-            return ResponseEntity.badRequest().build();
-        }
+    public ResponseEntity<Response> getRoles (){
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message("Success")
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .data(Map.of("Roles",service.getRoles())).build()
+        );
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> addUser (@RequestBody AppUser user){
-        try{
-            service.addUser(user);
-            return ResponseEntity.ok().build();
-        }catch(Exception e){
-            return ResponseEntity.badRequest().body(e.toString());
-        }
+    public ResponseEntity<Response> addUser (@RequestBody AppUser user){
+        service.addUser(user);
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message("Successfully added user")
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .build()
+        );
     }
 
     @PostMapping("/update")
-    public ResponseEntity<String> updateUser (@RequestBody AppUser user){
-        try{
-            service.updateUser(user);
-            return ResponseEntity.ok().build();
-        }catch(Exception e){
-            return ResponseEntity.badRequest().body(e.toString());
-        }
+    public ResponseEntity<Response> updateUser (@RequestBody AppUser user){
+        service.updateUser(user);
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message("User Updated successfully")
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .build()
+        );
     }
 
     @DeleteMapping("/delete/{id}/")
-    public ResponseEntity<String> deleteUser (@PathVariable long id){
-        try{
-            service.deleteUser(id);
-            return ResponseEntity.ok().body("Successfully deleted");
-        }catch(Exception e){
-            return ResponseEntity.badRequest().body(e.toString());
-        }
-
+    public ResponseEntity<Response> deleteUser (@PathVariable long id){
+        service.deleteUser(id);
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message("User Successfully deleted")
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .build()
+        );
     }
 }
