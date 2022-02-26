@@ -19,12 +19,20 @@ public class AppUserController {
 
     @GetMapping
     public ResponseEntity<List<AppUser>> getAllUsers (){
-        return ResponseEntity.ok().body(service.getUsers());
+        try{
+            return ResponseEntity.ok().body(service.getUsers());
+        }catch(Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("/roles")
     public ResponseEntity<List<AppRole>> getRoles (){
-        return ResponseEntity.ok().body(service.getRoles());
+        try{
+            return ResponseEntity.ok().body(service.getRoles());
+        }catch(Exception e){
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping("/add")
@@ -39,13 +47,22 @@ public class AppUserController {
 
     @PostMapping("/update")
     public ResponseEntity<String> updateUser (@RequestBody AppUser user){
-        service.updateUser(user);
-        return ResponseEntity.ok().build();
+        try{
+            service.updateUser(user);
+            return ResponseEntity.ok().build();
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e.toString());
+        }
     }
 
     @DeleteMapping("/delete/{id}/")
     public ResponseEntity<String> deleteUser (@PathVariable long id){
-        service.deleteUser(id);
-        return ResponseEntity.ok().body("Successfully deleted");
+        try{
+            service.deleteUser(id);
+            return ResponseEntity.ok().body("Successfully deleted");
+        }catch(Exception e){
+            return ResponseEntity.badRequest().body(e.toString());
+        }
+
     }
 }

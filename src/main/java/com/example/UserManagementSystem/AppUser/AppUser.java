@@ -4,6 +4,7 @@ import com.example.UserManagementSystem.Roles.AppRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,6 +21,7 @@ public class AppUser {
     private String firstName;
     @Column(nullable = false)
     private String lastName;
+    private String profileImage;
     @Column(unique = true)
     private String email;
     @Column(nullable = false)
@@ -28,11 +30,11 @@ public class AppUser {
     private boolean active;
     @Column(nullable = false)
     private boolean locked;
-    @Column(unique = true,updatable = false)
-    private String userID;
+    @CreationTimestamp
     @Column(nullable = false,updatable = false)
     private LocalDateTime createdDate;
-//    @ManyToOne
-//    @JoinColumn(name = "role_id",nullable = false)
-//    private AppRole role;
+    private LocalDateTime lastLogin;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "role_id")
+    private AppRole role;
 }
