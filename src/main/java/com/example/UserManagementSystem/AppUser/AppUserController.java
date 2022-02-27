@@ -9,8 +9,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +68,18 @@ public class AppUserController {
                 Response.builder()
                         .timestamp(LocalDateTime.now())
                         .message("User Updated successfully")
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+    @PostMapping("/upload-photo")
+    public ResponseEntity<Response> uploadPhoto (@RequestParam Long id,@RequestPart("photo") MultipartFile photo) throws IOException {
+        service.uploadPhoto(id,photo);
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message("Profile picture uploaded successfully")
                         .statusCode(HttpStatus.OK.value())
                         .status(HttpStatus.OK)
                         .build()

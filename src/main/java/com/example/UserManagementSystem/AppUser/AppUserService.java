@@ -6,8 +6,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,6 +72,20 @@ public class AppUserService {
         }
     }
 
+    public void uploadPhoto(Long id,MultipartFile photo) throws IOException {
+            if (repo.findById(id).isEmpty()){
+                log.info("user with id:{} not found",id);
+                throw new RuntimeException("User associated with photo not found");
+            }
+            AppUser user = repo.getById(id);
+            String folder = "/AppUserProjectPhotos/";
+            byte [] bytes = photo.getBytes();
+            Path path = Paths.get(folder +System.currentTimeMillis()+ photo.getOriginalFilename());
+            Files.write(path,bytes);
+            user.setProfileImage(path.toString());
+            repo.save(user);
+    }
+
     public void deleteUser(Long id){
         try{
             repo.deleteById(id);
@@ -75,4 +95,5 @@ public class AppUserService {
             throw new RuntimeException(e);
         }
     }
+
 }
