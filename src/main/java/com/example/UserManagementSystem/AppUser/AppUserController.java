@@ -6,13 +6,22 @@ import com.example.UserManagementSystem.Response.Response;
 import com.example.UserManagementSystem.Roles.AppRole;
 import com.example.UserManagementSystem.Roles.RoleRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -84,6 +93,19 @@ public class AppUserController {
                         .status(HttpStatus.OK)
                         .build()
         );
+    }
+
+    @GetMapping("/get-photo/{filename}/")
+    public ResponseEntity<Resource> getPhoto (@PathVariable("filename") String filename) throws IOException{
+        Path path = Paths.get("/AppUserProjectPhotos/" + filename);
+        if(!Files.exists(path)) {
+            throw new FileNotFoundException(filename + " was not found on the server");
+        }
+        Resource resource = new UrlResource(path.toUri());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("File-Name", filename);
+        httpHeaders.add(HttpHeaders.CONTENT_DISPOSITION, "attachment;File-Name=" + resource.getFilename());
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(Files.probeContentType(path))).headers(httpHeaders).body(resource);
     }
 
     @DeleteMapping("/delete/{id}/")

@@ -63,6 +63,7 @@ public class AppUserService {
             }else {
                 user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
                 user.setRole(roleRepo.getById(user.getRole().getId()));
+                user.setProfileImage(repo.getById(user.getId()).getProfileImage());
                 log.info("user with id:{} updated",user.getId());
                 repo.save(user);
             }
@@ -80,9 +81,10 @@ public class AppUserService {
             AppUser user = repo.getById(id);
             String folder = "/AppUserProjectPhotos/";
             byte [] bytes = photo.getBytes();
-            Path path = Paths.get(folder +System.currentTimeMillis()+ photo.getOriginalFilename());
+            String photoName = System.currentTimeMillis()+ photo.getOriginalFilename();
+            Path path = Paths.get(folder + photoName);
             Files.write(path,bytes);
-            user.setProfileImage(path.toString());
+            user.setProfileImage(photoName);
             repo.save(user);
     }
 
