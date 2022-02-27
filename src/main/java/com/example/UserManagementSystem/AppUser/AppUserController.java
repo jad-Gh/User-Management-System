@@ -2,6 +2,7 @@ package com.example.UserManagementSystem.AppUser;
 
 
 
+import com.example.UserManagementSystem.Excel.UserExcelExporter;
 import com.example.UserManagementSystem.Response.Response;
 import com.example.UserManagementSystem.Roles.AppRole;
 import com.example.UserManagementSystem.Roles.RoleRepository;
@@ -16,13 +17,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +60,24 @@ public class AppUserController {
                         .status(HttpStatus.OK)
                         .data(Map.of("Roles",service.getRoles())).build()
         );
+    }
+
+    @GetMapping("/report")
+    public void exportToExcel(HttpServletResponse response)throws IOException{
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=users_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<AppUser> listUsers = service.getUsers();
+
+        UserExcelExporter excelExporter = new UserExcelExporter(listUsers);
+
+        excelExporter.export(response);
+
     }
 
     @PostMapping("/add")
