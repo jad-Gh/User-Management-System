@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public class AppUserController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Response> addUser (@RequestBody AppUser user){
+    public ResponseEntity<Response> addUser (@Valid @RequestBody AppUser user){
         service.addUser(user);
         return ResponseEntity.ok(
                 Response.builder()
@@ -59,7 +60,7 @@ public class AppUserController {
     }
 
     @PostMapping("/update")
-    public ResponseEntity<Response> updateUser (@RequestBody AppUser user){
+    public ResponseEntity<Response> updateUser (@Valid @RequestBody AppUser user){
         service.updateUser(user);
         return ResponseEntity.ok(
                 Response.builder()

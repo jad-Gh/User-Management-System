@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,13 +21,17 @@ public class AppUser {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(nullable = false)
+    @Size(min=2)
     private String firstName;
     @Column(nullable = false)
+    @Size(min=2)
     private String lastName;
     private String profileImage;
     @Column(unique = true)
+    @Email
     private String email;
     @Column(nullable = false)
+    @Size(min=8)
     private String password;
     @Column(nullable = false)
     private boolean active;

@@ -5,6 +5,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -12,10 +14,34 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @ControllerAdvice
 public class CustomExceptionHandler{
+
+    //for the @Valid annotation errors
+    @ExceptionHandler( MethodArgumentNotValidException.class )
+    public ResponseEntity<Object> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException e) {
+        List<String> errors = new ArrayList<String>();
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            errors.add(error.getField() + ": " + error.getDefaultMessage());
+        }
+//        for (Object error : e.getBindingResult().getGlobalErrors()) {
+//            errors.add(error.getObjectName() + ": " + error.getDefaultMessage());
+//        }
+        return new ResponseEntity<Object>(
+                Response.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message(e.getLocalizedMessage())
+                        .status(HttpStatus.BAD_REQUEST)
+                        .statusCode(HttpStatus.BAD_REQUEST.value())
+                        .errors(errors)
+                        .build()
+                , new HttpHeaders()
+                , HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler({ HttpMessageNotReadableException.class })
     public ResponseEntity<Object> handleHttpMessageNotReadableException(
