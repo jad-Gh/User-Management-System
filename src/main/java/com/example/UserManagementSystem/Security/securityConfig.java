@@ -52,7 +52,9 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(exceptionHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/signin").permitAll()
-                .antMatchers("/user/**").hasAnyAuthority("ROLE_USER")
+                .antMatchers("/user/report","/user/update").hasAnyAuthority("ROLE_MODERATOR","ROLE_MANAGER","ROLE_ADMIN")
+                .antMatchers("/user/roles","/user/add").hasAnyAuthority("ROLE_MANAGER","ROLE_ADMIN")
+                .antMatchers("/user/delete/**").hasAnyAuthority("ROLE_ADMIN")
                 .anyRequest().authenticated();
 
         http.addFilterBefore(new AuthFilter(), UsernamePasswordAuthenticationFilter.class);

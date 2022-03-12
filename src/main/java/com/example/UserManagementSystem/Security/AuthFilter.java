@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -52,6 +53,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
                 }catch (Exception e){
                     log.error("Error validating JWT Token at doFilterInternal: "+ e.getMessage());
+
                 }
             }else {
                 filterChain.doFilter(request, response);
