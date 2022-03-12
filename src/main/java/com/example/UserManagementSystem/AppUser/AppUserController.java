@@ -39,14 +39,16 @@ public class AppUserController {
     private final AppUserService service;
 
     @GetMapping
-    public ResponseEntity<Response> getAllUsers (){
+    public ResponseEntity<Response> getAllUsers (@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size,
+                                                 @RequestParam(defaultValue = "") String email){
         return ResponseEntity.ok(
                 Response.builder()
                         .timestamp(LocalDateTime.now())
                         .message("Success")
                         .statusCode(HttpStatus.OK.value())
                         .status(HttpStatus.OK)
-                        .data(Map.of("Users",service.getUsers())).build()
+                        .data(Map.of("Content",service.getUsers(page,size,email))).build()
         );
     }
 
@@ -72,7 +74,7 @@ public class AppUserController {
         String headerValue = "attachment; filename=users_" + currentDateTime + ".xlsx";
         response.setHeader(headerKey, headerValue);
 
-        List<AppUser> listUsers = service.getUsers();
+        List<AppUser> listUsers = List.of((AppUser) service.getUsers(0,10,"").get("Users"));
 
         UserExcelExporter excelExporter = new UserExcelExporter(listUsers);
 

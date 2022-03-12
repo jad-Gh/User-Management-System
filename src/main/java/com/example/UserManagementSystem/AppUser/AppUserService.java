@@ -4,6 +4,10 @@ import com.example.UserManagementSystem.Roles.AppRole;
 import com.example.UserManagementSystem.Roles.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,9 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service @RequiredArgsConstructor @Slf4j
 public class AppUserService {
@@ -24,10 +26,19 @@ public class AppUserService {
     private final AppUserRepo repo;
     private final RoleRepository roleRepo;
 
-    public List<AppUser> getUsers(){
+    public Map<String,Object> getUsers(int page,int size,String email){
         try{
             log.info("retrieving users...");
-            return repo.findAll();
+//            return repo.findAll();
+            Pageable paging = PageRequest.of(page,size, Sort.by("email"));
+            Page<AppUser> pageUsers =repo.findByEmailContaining(email,paging);
+            Map<String,Object> response= new HashMap<>();
+            response.put("Total Elements",pageUsers.getTotalElements());
+            response.put("Total Pages",pageUsers.getTotalPages());
+            response.put("Current Page",pageUsers.getNumber());
+            response.put("Users",pageUsers.getContent());
+            return response;
+
         }catch(Exception e){
             log.error("error retrieving users "+ e.toString());
             throw new RuntimeException(e);
