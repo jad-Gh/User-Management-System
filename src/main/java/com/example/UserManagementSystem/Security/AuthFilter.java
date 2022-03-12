@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -33,7 +34,7 @@ public class AuthFilter extends OncePerRequestFilter {
         if (request.getServletPath().equals("/signin")){
             filterChain.doFilter(request,response);
         }else {
-            String authHeader = request.getHeader("AUTHORIZATION");
+            String authHeader = request.getHeader("Authorization");
             if (authHeader != null && authHeader.startsWith("Bearer ")){
                 try {
                     String token = authHeader.substring("Bearer ".length());
@@ -46,6 +47,7 @@ public class AuthFilter extends OncePerRequestFilter {
                     Arrays.stream(roles).forEach(role-> authorities.add(new SimpleGrantedAuthority(role)));
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(userName,null,authorities);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
                     filterChain.doFilter(request, response);
 
                 }catch (Exception e){

@@ -30,10 +30,10 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AuthFilter authFilter(){
-        return new AuthFilter();
-    }
+//    @Bean
+//    public AuthFilter authFilter(){
+//        return new AuthFilter();
+//    }
 
     @Bean
     @Override
@@ -52,9 +52,10 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(exceptionHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/signin").permitAll()
-                .anyRequest().permitAll();
+                .antMatchers("/user/**").hasAnyAuthority("ROLE_USER")
+                .anyRequest().authenticated();
 
-        http.addFilterBefore(authFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AuthFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

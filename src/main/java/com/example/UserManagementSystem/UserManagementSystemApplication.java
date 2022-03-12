@@ -26,10 +26,10 @@ public class UserManagementSystemApplication {
 		return (args) -> {
 			repository.saveAll(
 					List.of(
-							new AppRole("Role_User",true,false,false,false),
-							new AppRole("Role_Moderator",true,false,false,true),
-							new AppRole("Role_Manager",true,true,false,true),
-							new AppRole("Role_Admin",true,true,true,true)
+							new AppRole("ROLE_USER",true,false,false,false),
+							new AppRole("ROLE_MODERATOR",true,false,false,true),
+							new AppRole("ROLE_MANAGER",true,true,false,true),
+							new AppRole("ROLE_ADMIN",true,true,true,true)
 					)
 
 			);

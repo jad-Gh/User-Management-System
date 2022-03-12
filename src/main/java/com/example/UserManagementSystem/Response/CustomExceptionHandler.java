@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,6 +20,23 @@ import java.util.List;
 
 @ControllerAdvice
 public class CustomExceptionHandler{
+
+    //for signin
+    @ExceptionHandler({ BadCredentialsException.class })
+    public ResponseEntity<Object> handleBadCredentialsException(
+            BadCredentialsException e, WebRequest request) {
+
+        return new ResponseEntity<Object>(
+                Response.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message(e.getLocalizedMessage())
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .statusCode(HttpStatus.UNAUTHORIZED.value())
+                        .errors(List.of(e.toString()))
+                        .build()
+                , new HttpHeaders()
+                , HttpStatus.UNAUTHORIZED);
+    }
 
     //for the @Valid annotation errors
     @ExceptionHandler( MethodArgumentNotValidException.class )
