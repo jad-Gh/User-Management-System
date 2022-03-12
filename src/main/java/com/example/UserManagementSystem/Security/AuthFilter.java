@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,14 +22,12 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 
 @Slf4j
 public class AuthFilter extends OncePerRequestFilter {
     @Autowired
     private JWTUtil jwtUtil;
-
-    @Autowired
-    private UserDetailsServiceImp userDetailsServiceImp;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -53,7 +52,9 @@ public class AuthFilter extends OncePerRequestFilter {
 
                 }catch (Exception e){
                     log.error("Error validating JWT Token at doFilterInternal: "+ e.getMessage());
-
+                    response.sendError(401,"UnAuthorized");
+//                    response.setContentType(org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE);
+//                    new ObjectMapper().writeValue(response.getOutputStream(), Map.of("Error",e.getMessage()));
                 }
             }else {
                 filterChain.doFilter(request, response);
