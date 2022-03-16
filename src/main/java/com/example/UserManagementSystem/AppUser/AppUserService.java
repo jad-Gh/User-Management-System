@@ -58,6 +58,7 @@ public class AppUserService {
         try{
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             user.setRole(roleRepo.getById(user.getRole().getId()));
+            user.setLocked(true);
             repo.save(user);
             log.info("user saved");
         }catch(Exception e){

@@ -3,6 +3,7 @@ package com.example.UserManagementSystem.AppUser;
 
 
 import com.example.UserManagementSystem.Excel.UserExcelExporter;
+import com.example.UserManagementSystem.RegistrationService.RegistrationService;
 import com.example.UserManagementSystem.Response.Response;
 import com.example.UserManagementSystem.Roles.AppRole;
 import com.example.UserManagementSystem.Roles.RoleRepository;
@@ -37,6 +38,7 @@ import java.util.Map;
 public class AppUserController {
 
     private final AppUserService service;
+    private final RegistrationService registrationService;
 
     @GetMapping
     public ResponseEntity<Response> getAllUsers (@RequestParam(defaultValue = "0") int page,
@@ -84,7 +86,8 @@ public class AppUserController {
 
     @PostMapping("/add")
     public ResponseEntity<Response> addUser (@Valid @RequestBody AppUser user){
-        service.addUser(user);
+//        service.addUser(user);
+        registrationService.registerUser(user);
         return ResponseEntity.ok(
                 Response.builder()
                         .timestamp(LocalDateTime.now())
