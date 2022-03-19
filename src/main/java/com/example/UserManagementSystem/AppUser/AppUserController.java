@@ -110,6 +110,21 @@ public class AppUserController {
                         .build()
         );
     }
+
+    @GetMapping("/reset-password/{email}")
+    public ResponseEntity<Response> resetPassword(@PathVariable("email") String email){
+        registrationService.sendResetPasswordEmail(email);
+        return ResponseEntity.ok(
+                Response.builder()
+                        .timestamp(LocalDateTime.now())
+                        .message("Email Sent successfully")
+                        .statusCode(HttpStatus.OK.value())
+                        .status(HttpStatus.OK)
+                        .build()
+        );
+    }
+
+
     @PostMapping("/upload-photo")
     public ResponseEntity<Response> uploadPhoto (@RequestParam Long id,@RequestPart("photo") MultipartFile photo) throws IOException {
         service.uploadPhoto(id,photo);

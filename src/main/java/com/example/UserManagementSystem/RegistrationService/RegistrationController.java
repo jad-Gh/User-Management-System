@@ -20,4 +20,9 @@ public class RegistrationController {
         return registrationService.enableUser(token);
     }
 
+    @GetMapping("/reset")
+    public String resetPasswordToken(@RequestParam("token") String token){
+        return registrationService.resetUserPassword(token);
+    }
+
 }
