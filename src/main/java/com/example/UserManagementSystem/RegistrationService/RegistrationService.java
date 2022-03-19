@@ -8,6 +8,7 @@ import com.example.UserManagementSystem.ConfirmationToken.ConfirmationTokenRepo;
 import com.example.UserManagementSystem.ConfirmationToken.ConfirmationTokenService;
 import com.example.UserManagementSystem.EmailSender.EmailSender;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,6 +58,7 @@ public class RegistrationService {
     }
 
     @Transactional
+    @CacheEvict(value = "Users",allEntries = true)
     public String enableUser(String token){
         ConfirmationToken confirmationToken =  confirmationTokenService.findToken(token);
         if (confirmationToken.getExpirationDate().isBefore(LocalDateTime.now()) ){
@@ -69,6 +71,7 @@ public class RegistrationService {
     }
 
     @Transactional
+    @CacheEvict(value = "Users",allEntries = true)
     public String resetUserPassword(String token){
         ConfirmationToken confirmationToken = confirmationTokenService.findToken(token);
         if (confirmationToken.getExpirationDate().isBefore(LocalDateTime.now())){

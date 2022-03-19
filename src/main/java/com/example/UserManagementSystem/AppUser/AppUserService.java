@@ -4,6 +4,8 @@ import com.example.UserManagementSystem.Roles.AppRole;
 import com.example.UserManagementSystem.Roles.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,7 @@ public class AppUserService {
     private final AppUserRepo repo;
     private final RoleRepository roleRepo;
 
+    @Cacheable(value="Users")
     public Map<String,Object> getUsers(int page,int size,String email){
         try{
             log.info("retrieving users...");
@@ -45,6 +48,7 @@ public class AppUserService {
         }
     }
 
+    @Cacheable(value = "Roles")
     public List<AppRole> getRoles(){
         try{
             return roleRepo.findAll();
@@ -54,6 +58,8 @@ public class AppUserService {
         }
     }
 
+
+    @CacheEvict(value = "Users",allEntries = true)
     public void addUser(AppUser user){
         try{
             user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
@@ -67,6 +73,7 @@ public class AppUserService {
         }
     }
 
+    @CacheEvict(value = "Users",allEntries = true)
     public void updateUser(AppUser user){
         try {
             if (repo.findById(user.getId()).isEmpty()){
@@ -85,6 +92,7 @@ public class AppUserService {
         }
     }
 
+    @CacheEvict(value = "Users",allEntries = true)
     public void uploadPhoto(Long id,MultipartFile photo) throws IOException {
             if (repo.findById(id).isEmpty()){
                 log.info("user with id:{} not found",id);
@@ -100,6 +108,7 @@ public class AppUserService {
             repo.save(user);
     }
 
+    @CacheEvict(value = "Users",allEntries = true)
     public void deleteUser(Long id){
         try{
             repo.deleteById(id);
