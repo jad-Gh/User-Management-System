@@ -1,0 +1,6 @@
+2022-03-19 16:33:03,897 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Starting UserManagementSystemApplication using Java 17.0.2 on DESKTOP-LBVHSVF with PID 15688 (C:\Users\user\IdeaProjects\User-Management-System\target\classes started by Jad in C:\Users\user\IdeaProjects\User-Management-System)
+2022-03-19 16:33:03,900 DEBUG org.springframework.boot.StartupInfoLogger [restartedMain] Running with Spring Boot v2.6.3, Spring v5.3.15
+2022-03-19 16:33:03,901 INFO org.springframework.boot.SpringApplication [restartedMain] No active profile set, falling back to default profiles: default
+2022-03-19 16:33:09,683 INFO org.springframework.boot.StartupInfoLogger [restartedMain] Started UserManagementSystemApplication in 6.606 seconds (JVM running for 8.477)
+2022-03-19 16:35:11,829 ERROR com.example.UserManagementSystem.Security.AuthFilter [http-nio-8080-exec-1] Error validating JWT Token at doFilterInternal: The Token has expired on Sat Mar 19 16:02:13 EET 2022.
+2022-03-19 16:35:11,850 ERROR com.example.UserManagementSystem.Security.AuthExceptionHandler [http-nio-8080-exec-1] Error caught at auth exception handler: Full authentication is required to access this resource

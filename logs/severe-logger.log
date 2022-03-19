@@ -1,0 +1,2 @@
+2022-03-19 16:35:11,829 ERROR com.example.UserManagementSystem.Security.AuthFilter [http-nio-8080-exec-1] Error validating JWT Token at doFilterInternal: The Token has expired on Sat Mar 19 16:02:13 EET 2022.
+2022-03-19 16:35:11,850 ERROR com.example.UserManagementSystem.Security.AuthExceptionHandler [http-nio-8080-exec-1] Error caught at auth exception handler: Full authentication is required to access this resource
